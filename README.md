@@ -13,6 +13,14 @@ This project is called "auth-next" and it aims to provide a secure authenticatio
 - Account verification via email
 - Password reset functionality
 
+## Screenshots
+
+Here are some screenshots of the application:
+
+![Login](./public/login.png)
+![Signup](./public/signup.png)
+
+
 ## Installation
 
 1. Clone the repository: `git clone https://github.com/username/auth-next.git`
