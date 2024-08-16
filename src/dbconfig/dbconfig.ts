@@ -10,7 +10,7 @@ export async function connect() {
             console.log('Connected to the database');
         });
 
-        connection.on('error', (error) => {
+        connection.on('error', (error : any) => {
             console.log('Error connecting to the database: ', error);
         }
         );

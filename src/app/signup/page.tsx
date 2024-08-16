@@ -1,8 +1,9 @@
-"use client";                                  // to make this file client side only
+"use client";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import {useRouter } from "next/navigation";                // next/router is deprecated
-import axios from "axios";                           // axios is a promise based HTTP client for the browser and node.js
+import {useRouter} from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 
 
@@ -10,68 +11,74 @@ import axios from "axios";                           // axios is a promise based
 export default function SignupPage() {
     const router = useRouter();
     const [user, setUser] = React.useState({
-        username: "",
         email: "",
         password: "",
-    });
-    const [buttondisabled, setbuttondisabled] = React.useState(false);
+        username: "",
+    })
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+
     const onSignup = async () => {
         try {
             setLoading(true);
             const response = await axios.post("/api/users/signup", user);
-            console.log(response.data);
-            console.log("User signed up");
-        }
-        catch (error) {
-            console.log("Error signing up: ", error);
-        }
-        finally {
+            console.log("Signup success", response.data);
+            router.push("/login");
+            
+        } catch (error:any) {
+            console.log("Signup failed", error.message);
+            
+            toast.error(error.message);
+        }finally {
             setLoading(false);
         }
+    }
 
     useEffect(() => {
-        if(user.password.length > 0 && user.email.length > 0 && user.username.length > 0){
-            setbuttondisabled(false);
-        }
-        else{
-            setbuttondisabled(true)
+        if(user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
+            setButtonDisabled(false);
+        } else {
+            setButtonDisabled(true);
         }
     }, [user]);
 
 
-        
     return (
-        <div className = "flex ">
-            <h1 className = "text-center text-white text-2xl">Signup</h1>
-            <input
-                className="mb-4"
-                type = "text"
-                placeholder = "Username"
-                value = {user.username}
-                onChange = {(e) => setUser({...user, username: e.target.value})}
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <h1>{loading ? "Processing" : "Signup"}</h1>
+        <hr />
+        <label htmlFor="username">username</label>
+        <input 
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
+            id="username"
+            type="text"
+            value={user.username}
+            onChange={(e) => setUser({...user, username: e.target.value})}
+            placeholder="username"
             />
-            <input
-                className="mb-4"
-                type = "email"
-                placeholder = "Email"
-                value = {user.email}
-                onChange = {(e) => setUser({...user, email: e.target.value})}
+        <label htmlFor="email">email</label>
+        <input 
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
+            id="email"
+            type="text"
+            value={user.email}
+            onChange={(e) => setUser({...user, email: e.target.value})}
+            placeholder="email"
             />
-            <input
-                className="mb-4"
-                type = "password"
-                placeholder = "Password"
-                value = {user.password}
-                onChange = {(e) => setUser({...user, password: e.target.value})}
+        <label htmlFor="password">password</label>
+        <input 
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
+            id="password"
+            type="password"
+            value={user.password}
+            onChange={(e) => setUser({...user, password: e.target.value})}
+            placeholder="password"
             />
-            <button 
-                className = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick = {onSignup}>{ buttondisabled ? "no signup" : "signup" }</button>
-            <Link href="/login">
-                visit the login page
-            </Link>
+            <button
+            onClick={onSignup}
+            className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600">{buttonDisabled ? "No signup" : "Signup"}</button>
+            <Link href="/login">Visit login page</Link>
         </div>
-    );
-};
+    )
+
 }

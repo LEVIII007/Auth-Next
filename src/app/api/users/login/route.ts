@@ -1,7 +1,7 @@
 import {connect} from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 import {NextResponse, NextRequest} from "next/server";
-import bcrypt from "bcrypt"
+import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"; 
 
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
         await User.findOne({email}).then((user) => {
             if (user) {
-                const validpassword = await bcrypt.compare(password, user.password);
+                const validpassword = await bcryptjs.compare(password, user.password);
                 if(validpassword){
                     const tokendata = {
                         id : user._id,
